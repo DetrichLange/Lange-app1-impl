@@ -1,0 +1,33 @@
+@startuml
+'https://plantuml.com/class-diagram
+
+class Application {
+}
+
+class FXMLController {
+}
+
+class fileReader {
++public toDoList readListsFromFile(String filePath)
+}
+
+class fileWriter {
++void saveListsToFile(String filePath)
+}
+
+class toDoList {
+toDoListEntry[] entries
+String title
+}
+
+class toDoListEntry {
+String description
+String dueDate
+boolean completeness
+}
+
+toDoList --* toDoListEntry: contains
+fileReader --* toDoList : creates
+toDoList --* fileWriter
+
+@enduml

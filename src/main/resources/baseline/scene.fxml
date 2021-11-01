@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="641.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="baseline.FXMLController">
+   <children>
+      <GridPane layoutY="27.0" prefHeight="374.0" prefWidth="641.0">
+        <columnConstraints>
+          <ColumnConstraints hgrow="SOMETIMES" maxWidth="295.20001220703125" minWidth="10.0" prefWidth="163.60003662109375" />
+          <ColumnConstraints hgrow="SOMETIMES" maxWidth="477.5999633789063" minWidth="10.0" prefWidth="477.5999633789063" />
+        </columnConstraints>
+        <rowConstraints>
+          <RowConstraints maxHeight="128.60001220703126" minHeight="6.200005912780767" prefHeight="111.79999008178712" vgrow="SOMETIMES" />
+          <RowConstraints maxHeight="260.5999940872192" minHeight="10.0" prefHeight="206.40000991821287" vgrow="SOMETIMES" />
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+        </rowConstraints>
+         <children>
+            <AnchorPane prefHeight="374.0" prefWidth="192.0" GridPane.rowSpan="3">
+               <children>
+                  <ScrollPane prefHeight="374.0" prefWidth="164.0">
+                     <content>
+                        <VBox fx:id="boxOfLabels" prefHeight="372.0" prefWidth="161.0">
+                           <opaqueInsets>
+                              <Insets />
+                           </opaqueInsets>
+                           <padding>
+                              <Insets bottom="3.0" left="10.0" top="3.0" />
+                           </padding>
+                           <children>
+                              <Button mnemonicParsing="false" text="To-Do List 1" />
+                           </children>
+                        </VBox>
+                     </content>
+                  </ScrollPane>
+               </children>
+            </AnchorPane>
+            <HBox prefHeight="100.0" prefWidth="200.0" spacing="10.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
+               <children>
+                  <Button mnemonicParsing="false" text="New List" />
+                  <Button mnemonicParsing="false" text="Export" />
+                  <Button mnemonicParsing="false" text="Import" />
+                  <TextField text="File name" />
+               </children>
+               <padding>
+                  <Insets bottom="3.0" left="3.0" right="3.0" top="3.0" />
+               </padding>
+               <GridPane.margin>
+                  <Insets />
+               </GridPane.margin>
+            </HBox>
+            <ScrollPane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowSpan="2">
+               <content>
+                  <VBox prefHeight="316.0" prefWidth="475.0" spacing="5.0">
+                     <children>
+                        <HBox prefHeight="26.0" prefWidth="434.0">
+                           <children>
+                              <Button mnemonicParsing="false" text="New Item" />
+                              <Button mnemonicParsing="false" text="Save Name" />
+                           </children>
+                        </HBox>
+                        <HBox prefHeight="23.0" prefWidth="434.0" spacing="10.0">
+                           <children>
+                              <Label text="List Name:">
+                                 <padding>
+                                    <Insets top="5.0" />
+                                 </padding>
+                              </Label>
+                              <TextField text="To-Do List 1" />
+                              <CheckBox mnemonicParsing="false" text="Show Complete" />
+                              <CheckBox mnemonicParsing="false" text="Show Uncomplete" />
+                           </children>
+                        </HBox>
+                        <HBox alignment="CENTER" prefHeight="21.0" prefWidth="470.0" spacing="10.0" />
+                        <HBox layoutX="10.0" layoutY="41.0" prefHeight="23.0" prefWidth="434.0" spacing="10.0">
+                           <children>
+                              <Label text="Due Date:            ">
+                                 <padding>
+                                    <Insets top="5.0" />
+                                 </padding>
+                              </Label>
+                              <TextField prefHeight="26.0" prefWidth="118.0" text="YYYY-MM-DD" />
+                              <CheckBox mnemonicParsing="false" text="Complete" />
+                           </children>
+                        </HBox>
+                        <HBox layoutX="10.0" layoutY="72.0" prefHeight="50.0" prefWidth="434.0" spacing="10.0">
+                           <children>
+                              <Label text="Item Description:">
+                                 <padding>
+                                    <Insets top="5.0" />
+                                 </padding>
+                              </Label>
+                              <TextArea prefHeight="200.0" prefWidth="200.0">
+                                 <padding>
+                                    <Insets bottom="3.0" top="3.0" />
+                                 </padding>
+                              </TextArea>
+                              <Button mnemonicParsing="false" text="Save Item" />
+                              <Button mnemonicParsing="false" text="Delete Item" />
+                           </children>
+                        </HBox>
+                        <HBox layoutX="15.0" layoutY="120.0" prefHeight="23.0" prefWidth="434.0" spacing="10.0">
+                           <children>
+                              <Label text="Due Date:            ">
+                                 <padding>
+                                    <Insets top="5.0" />
+                                 </padding>
+                              </Label>
+                              <TextField prefHeight="26.0" prefWidth="118.0" text="YYYY-MM-DD" />
+                              <CheckBox mnemonicParsing="false" text="Complete" />
+                           </children>
+                        </HBox>
+                        <HBox layoutX="15.0" layoutY="150.0" prefHeight="50.0" prefWidth="434.0" spacing="10.0">
+                           <children>
+                              <Label text="Item Description:">
+                                 <padding>
+                                    <Insets top="5.0" />
+                                 </padding>
+                              </Label>
+                              <TextArea prefHeight="200.0" prefWidth="200.0">
+                                 <padding>
+                                    <Insets bottom="3.0" top="3.0" />
+                                 </padding>
+                              </TextArea>
+                              <Button mnemonicParsing="false" text="Save Item" />
+                              <Button mnemonicParsing="false" text="Delete Item" />
+                           </children>
+                        </HBox>
+                     </children>
+                     <padding>
+                        <Insets left="5.0" />
+                     </padding>
+                  </VBox>
+               </content>
+            </ScrollPane>
+         </children>
+      </GridPane>
+      <MenuBar layoutY="2.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+        <menus>
+          <Menu mnemonicParsing="false" text="File">
+            <items>
+              <MenuItem mnemonicParsing="false" text="Close" />
+            </items>
+          </Menu>
+          <Menu mnemonicParsing="false" text="Edit">
+            <items>
+              <MenuItem mnemonicParsing="false" text="Delete" />
+            </items>
+          </Menu>
+          <Menu mnemonicParsing="false" text="Help">
+            <items>
+              <MenuItem mnemonicParsing="false" text="About" />
+            </items>
+          </Menu>
+        </menus>
+      </MenuBar>
+   </children>
+</AnchorPane>
