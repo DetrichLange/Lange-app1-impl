@@ -17,12 +17,12 @@ import java.util.Objects;
 
 
 class fileReader {
-    public toDoList[] readListsFromFile(String filePath){
+    public toDoList readListsFromFile(String filePath){
         //Taking a file path as an argument, this method opens and scans a text file at the specified path
         //The first line of the file should be the name of the to-do list, and how many entries it has
         //Each line after that is the description, date, and completeness of a single entry
-        //Continue reading until there are no more lines
-        //Return an array of the to-do lists from the text file
+        //Continue reading until there are no more lines.
+        //Return an array of the to-do lists from the text file.
         return null;
     }
 }

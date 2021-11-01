@@ -1,3 +1,8 @@
+/*
+ *  UCF COP3330 Fall 2021 Application Assignment 1 Solution
+ *  Copyright 2021 Detrich Lange
+ */
+
 package baseline;
 
 import java.net.URL;
@@ -23,49 +28,31 @@ public class FXMLController implements Initializable {
 
 
     @FXML
-    void focusOnList(ActionEvent event) {
-        //When you click the button on the left panel for a specific list:
-            //the main panel should populate with the information for that list.
-            //Change the contents of the List Name text box to the focused list's name
-            //remove any list entries from the previously focused list
-            //create a pane with list entry details for each entry in the list in the vbox below the list's name
-    }
-
-    @FXML
-    void makeNewList(ActionEvent event) {
-        //When you click the New List button on the bottom panel:
-            //Create a new entry in the array of toDoLists
-            //Create a new button in the left panel for that list
-    }
-
-    @FXML
-    void saveName(ActionEvent event) {
-        //When you click the Save Name button on the top panel:
-            //Update the focused list's name parameter with the contents of the name text field
-    }
-
-    @FXML
-    void importLists(ActionEvent event) {
+    void importList(ActionEvent event) {
         //When you click the Import button on the bottom panel:
-            //Discard the contents of the array of to-do lists
-            //Use fileReader to read all the to-do lists from the text file specified in the text field into an array
-            //For each to-do list in the array:
-                //Create a button in the left panel
+            //Discard the contents of the toDoList
+            //Use fileReader to read all the entries from the text file specified in the text field into the toDoList
     }
 
     @FXML
-    void exportLists(ActionEvent event) {
+    void exportList(ActionEvent event) {
         //When you click the Export button on the bottom panel:
             //Open a formatter for a text file with the path specified in the text field
-            //For each to-do list in the array:
-                //Use fileWriter to write the list and each of its entries in the text file
+            //For each entry in the list:
+                //Use fileWriter to write the item's description, due date, and completeness in the text file
     }
 
     @FXML
     void newItem(ActionEvent event) {
         //When you click the New Item button on the top panel:
-        //Create a new toDoListEntry in the array of the focused list
+        //Create a new toDoListEntry in the toDoList
         //Make a new pane for that entry in the main panel below the current entries
+    }
+
+    @FXML
+    void clearList(ActionEvent event) {
+        //When you click the Clear List button on the top panel:
+        //Remove all contents from the toDoList and redraw.
     }
 
     @FXML
@@ -82,9 +69,22 @@ public class FXMLController implements Initializable {
             //Remove that entry's pane
     }
 
+    @FXML
+    void hideShowComplete(ActionEvent event) {
+        //When you click the Hide/Show Complete button
+        //If completed items are currently being shown, redraw the list of items without completed items.
+        //If completed items are currently hidden, redraw the list of items with completed items shown.
+    }
+
+    @FXML
+    void hideShowIncomplete(ActionEvent event) {
+        //When you click the Hide/Show Incomplete button
+        //If incomplete items are currently being shown, redraw the list of items without incomplete items.
+        //If incomplete items are currently hidden, redraw the list of items with incomplete items shown.
+    }
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        String javaVersion = System.getProperty("java.version");
-        String javafxVersion = System.getProperty("javafx.version");
+
     }
 }
