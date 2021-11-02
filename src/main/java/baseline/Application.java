@@ -13,17 +13,42 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
+import java.io.IOException;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
-
+import java.util.Scanner;
 
 class fileReader {
-    public toDoList readListsFromFile(String filePath){
+    public toDoList readListsFromFile(String filePath) throws IOException{
+
+        String nextDescription = "";
+        String nextDate = "";
+        boolean nextCompletion = false;
+        toDoListEntry nextEntry = new toDoListEntry();
+        toDoList fileContents = new toDoList();
+
         //Taking a file path as an argument, this method opens and scans a text file at the specified path
-        //The first line of the file should be the name of the to-do list, and how many entries it has
-        //Each line after that is the description, date, and completeness of a single entry
-        //Continue reading until there are no more lines.
-        //Return an array of the to-do lists from the text file.
-        return null;
+        try(Scanner fileInput = new Scanner(Paths.get(filePath))){
+            while(fileInput.hasNext()){
+                //Each line contains the description, the due date, and the completion status of one item
+                nextDescription = fileInput.nextLine();
+                nextEntry.setDescription(nextDescription);
+
+                nextDate = fileInput.nextLine();
+                nextEntry.setDueDate(nextDate);
+
+                nextCompletion = Boolean.parseBoolean(fileInput.nextLine());
+                nextEntry.setCompletion(nextCompletion);
+
+                fileContents.addEntry(new toDoListEntry(nextDescription, nextDate, nextCompletion));
+                //Continue reading until there are no more lines.
+            }
+        }
+
+        //Return a to-do list with each entry from the text file.
+        return fileContents;
     }
 }
 
@@ -39,66 +64,87 @@ class fileWriter {
 }
 
 class toDoList {
-    private toDoListEntry[] entries;
-    private String title;
+    private List<toDoListEntry> entries = new ArrayList<>();
 
-    toDoList(String title){
-        //Constructs a new to-do list with a given title, gives error if title is less than three characters.
-    }
-
-    public void changeTitle(String title){
-        //Changes the title of the list, gives error if new title is less than three characters.
+    public void printList() {
+        for(toDoListEntry entry : entries){
+            System.out.println(entry.getDescription());
+            System.out.println(entry.getDueDate());
+            System.out.println(entry.getCompletionStatus());
+        }
     }
 
     public void addEntry(toDoListEntry newEntry){
         //Adds a new entry to the list
-    }
-
-    public String getTitle(){
-        //Returns the title of the list
-        return null;
+        entries.add(newEntry);
     }
 
     public toDoListEntry getEntry(int index){
         //Returns the entry at the specified index
+        return entries.get(index);
+    }
+
+    public int getLength(){
+        //Returns the number of entries in the list
+        return entries.size();
+    }
+
+    public toDoListEntry deleteEntry(int index){
+        //Discards the entry at the specified index
         return null;
+    }
+
+    public void clearList(){
+        //Discards all entries from the to-do list.
+        entries.clear();
+        System.out.println("List of entries cleared.");
     }
 }
 
 class toDoListEntry {
-    private String dueDate;
     private String description;
+    private String dueDate;
     private boolean completionStatus;
 
     toDoListEntry(){
         //Creates a new entry with completionStatus initialized to false
     }
 
-    public void setDueDate(String newDueDate){
+    toDoListEntry(String description, String dueDate, boolean completionStatus){
+        //Creates a new entry with due date, name, and completion status
+        this.dueDate = dueDate;
+        this.description = description;
+        this.completionStatus = completionStatus;
+    }
+
+    public void setDueDate(String dueDate){
         //Checks if the due date is formatted properly, returns an error message or sets the new due date.
+        this.dueDate = dueDate;
     }
 
-    public void setDescription(String newDescription){
+    public void setDescription(String description){
         //Sets the new description for the entry.
+        this.description = description;
     }
 
-    public void toggleCompletion(){
-        //Flips the completion status of the entry from true to false or vice-versa.
+    public void setCompletion(boolean completionStatus){
+        //Sets the completion status of an entry.
+        this.completionStatus = completionStatus;
     }
 
     public String getDueDate(){
         //Returns the due date of this item
-        return null;
+        return dueDate;
     }
 
     public String getDescription(){
         //Returns the description of this item
-        return null;
+        return description;
     }
 
     public boolean getCompletionStatus(){
         //Returns the due date of this item
-        return false;
+        return completionStatus;
     }
 }
 
@@ -107,12 +153,20 @@ public class Application extends javafx.application.Application {
 
     @Override
     public void start(Stage stage) throws Exception {
-        Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("scene.fxml")));
+        fileReader filereader = new fileReader();
+        toDoList startupList = new toDoList();
+
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("scene.fxml"));
+        Parent root = loader.load();
+        FXMLController controller = loader.<FXMLController>getController();
+        controller.setData(startupList);
+
+        //Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("scene.fxml")));
 
         Scene scene = new Scene(root);
         scene.getStylesheets().add(Objects.requireNonNull(getClass().getResource("styles.css")).toExternalForm());
 
-        stage.setTitle("JavaFX and Gradle");
+        stage.setTitle("To-Do List");
         stage.setScene(scene);
         stage.show();
     }
