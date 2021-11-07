@@ -2,32 +2,65 @@
 'https://plantuml.com/class-diagram
 
 class Application {
++void start(Stage stage) throws Exception
++static void main(String[] args)
 }
 
 class FXMLController {
+ToDoList workingList;
+List<HBox> boxList = new ArrayList<>();
+FileChooser fileChooser = new FileChooser();
+Scene workingScene;
+
++void setData(ToDoList startupList, Scene scene)
+-File chooseFile()
+-void makeNewItemBox()
+-void populateItemBoxes()
+-void importList() throws IOException
+-void exportList() throws IOException
+-void newItemButton()
+-clearListAndBoxes()
+-void saveItem(int whichItem, TextArea itemDescArea,
+DatePicker itemDateField, CheckBox itemCompletionBox)
+-void deleteItem(int whichItem)
+-void hideShowComplete()
+-void hideShowIncomplete()
++void initialize(URL url, ResourceBundle rb)
 }
 
-class fileReader {
-+public toDoList readListsFromFile(String filePath)
+class FileReader {
++ToDoList readListsFromFile(String filePath) throws IOException
 }
 
-class fileWriter {
-+void saveListsToFile(String filePath)
+class FileWriter {
++void writeListsToFile(String filePath, ToDoList saveData) throws FileNotFoundException
 }
 
-class toDoList {
-toDoListEntry[] entries
-String title
+class ToDoList {
+-List<ToDoListEntry> entries
++void addEntry(ToDoListEntry newEntry)
++ToDoListEntry getEntry(int index)
++int getLength()
++void deleteEntry(int index)
++void clearList()
 }
 
-class toDoListEntry {
-String description
-String dueDate
-boolean completeness
+class ToDoListEntry {
+-String description;
+-LocalDate dueDate;
+-boolean completionStatus;
++ToDoListEntry()
++ToDoListEntry(String description, LocalDate dueDate, boolean completionStatus)
++void setDueDate(LocalDate dueDate)
++void setDescription(String description)
++void setCompletion(boolean completionStatus)
++LocalDate getDueDate()
++String getDescription()
++boolean getCompletionStatus()
 }
 
-toDoList --* toDoListEntry: contains
-fileReader --* toDoList : creates
-toDoList --* fileWriter
+ToDoList --* ToDoListEntry: contains
+FileReader --* ToDoListEntry : creates
+ToDoList *-- FileWriter : reads
 
 @enduml

@@ -9,78 +9,83 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import org.junit.jupiter.api.Test;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.time.LocalDate;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class ApplicationTest {
 
+    //The methods in the controller, if I wrote them right, should only affect the GUI. They add, remove, or alter
+    //nodes in the scene, but don't directly mess with the to-do list's data. The methods in the ToDoList,
+    //ToDoListEntry, FileReader, and FileWriter classes are called to work with that data, so those are what I'm testing.
+
     @Test
-    public void readListsFromFile_test(){
+    public void readListsFromFile_test() throws IOException {
         //This method takes a string file path and returns an array of toDoLists
 
-        //The test will use a path for a text file in the data folder and compare the result of the method
-        //to a hardcoded object to confirm that it's reading and creating the objects properly
+        FileReader testReader = new FileReader();
+
+        //Use readListsFromFile on a test file in the data folder
+        ToDoList testList = testReader.readListsFromFile("data/testFile.txt");
+        String actual = testList.getEntry(0).getDescription();
+
+        //Compare it to a hardcoded string
+        String expected = "This is the description of the first item.";
+
+        assertEquals(expected, actual);
     }
 
     @Test
-    public void writeListsToFile_test(){
-        //This method takes an array of toDoLists and a string filepath, and writes them to a text file.
+    public void writeListsToFile_test() throws IOException {
+        //This method takes a ToDoList and a string filepath, and writes the list to a text file.
 
-        //The test will use a hardcoded array and filepath to call the method, then check that the file exists and has
-        //the correct contents.
+        //Create a ToDoList
+        ToDoList testList = new ToDoList();
+        for(int i=0;i<100;i++){
+            //Populate it with 100 entries
+            testList.addEntry(new ToDoListEntry(
+                    "This is entry number " + (i+1) + " for the writing test", null, false));
+        }
+
+        //Write that list to a file in the docs folder
+        FileWriter testWriter = new FileWriter();
+        testWriter.writeListsToFile("data/testFile2.txt", testList);
+
+        //Read the file that we just wrote
+        FileReader testReader = new FileReader();
+        ToDoList testList2 = testReader.readListsFromFile("data/testFile2.txt");
+
+        //Compare the last line in the entry to our hardcoded string
+        String expected = "This is entry number 100 for the writing test";
+        String actual = testList2.getEntry(99).getDescription();
+
+        assertEquals(expected, actual);
     }
 
     @Test
-    public void toDoList_test(){
-        //This test will test getters, setters, and constructors for the toDoList class
-        //Make a toDoList, add a title and entry, then check that the object has the correct title and entry.
-    }
+    public void list_Test(){
+        //This test will test getters, setters, and constructors for the ToDoList and ToDoListEntry classes
 
-    @Test
-    public void toDoListEntry_test(){
-        //This test will test getters, setters, and constructors for the toDoListEntry class
-        //Make a toDoListEntry, add a description, date, and completeness
-        //then check that the object has the correct attributes.
-    }
+        //Make a to-do list
+        ToDoList testList = new ToDoList();
+        //Make a blank entry
+        ToDoListEntry testEntry = new ToDoListEntry();
+        //Set a description, date, and completion for that entry
+        testEntry.setDescription("Test description");
+        testEntry.setDueDate(LocalDate.of(2023, 12, 13));
+        testEntry.setCompletion(true);
+        //Add the entry to the list
+        testList.addEntry(testEntry);
 
-    @Test
-    public void focusOnList_test(){
-        //This method should update the GUI with the attributes of the chosen toDoList.
-        //hopefully I can test that the contents of the list name text field are changed to match the right list
-    }
+        //Get the parameters of the to-do list's first entry and compare them
+        String actual = testList.getEntry(0).getDescription() +
+                testList.getEntry(0).getDueDate().toString() + testList.getEntry(0).getCompletionStatus();
+        String expected = "Test description2023-12-13true";
 
-    @Test
-    public void makeNewList_test(){
-        //This test will check to see if the children for the list-of-buttons pane on the left side is changed properly
-    }
-
-    @Test
-    public void saveName_test(){
-        //This test will make a toDoList, run the method on it, and check to see if the name is changed.
-    }
-
-    @Test
-    public void importLists_test(){
-        //This test will check to see if the number of children in the list-of-lists pane is correct after importing
-    }
-
-    @Test
-    public void exportLists_test(){
-        //This test will check to see if the exported text file matches a hardcoded expected string
-    }
-
-    @Test
-    public void newItem_test(){
-        //This test will check to see if the number of children in the list-of-items pane is correct after making the new item
-    }
-
-    @Test
-    public void saveItem_test(){
-        //This test will make a toDoListEntry, run the method, and compare the entry's attributes to the expected values.
-    }
-
-    @Test
-    public void deleteItem_test(){
-        //This test will make a toDoListEntry, add it to the GUI, then run the method to delete it and check that it's deleted.
+        assertEquals(expected, actual);
     }
 
 }

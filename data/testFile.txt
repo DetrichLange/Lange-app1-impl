@@ -1,6 +1,6 @@
 This is the description of the first item.
-YYYY-MM-DD
+2010-01-01
 true
 This is the description of the second item.
-putdatehere
+null
 false

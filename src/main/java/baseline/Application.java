@@ -6,80 +6,92 @@
 
 package baseline;
 
-import javafx.event.ActionEvent;
-import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Scanner;
+import java.time.LocalDate;
+import java.util.*;
 
-class fileReader {
-    public toDoList readListsFromFile(String filePath) throws IOException{
-
-        String nextDescription = "";
-        String nextDate = "";
-        boolean nextCompletion = false;
-        toDoListEntry nextEntry = new toDoListEntry();
-        toDoList fileContents = new toDoList();
-
+class FileReader {
+    public ToDoList readListsFromFile(String filePath) throws IOException{
         //Taking a file path as an argument, this method opens and scans a text file at the specified path
+        //Each line contains the description, the due date, or the completion status of one item
+
+        String nextDescription;
+        LocalDate nextDate;
+        boolean nextCompletion;
+        ToDoList fileContents = new ToDoList(); //This is the object that stores and works with all the entries.
+
         try(Scanner fileInput = new Scanner(Paths.get(filePath))){
-            while(fileInput.hasNext()){
-                //Each line contains the description, the due date, and the completion status of one item
-                nextDescription = fileInput.nextLine();
-                nextEntry.setDescription(nextDescription);
+            while(fileInput.hasNext()){ //Each item is exactly three lines
+                //The first line is the description.
+                //Line breaks that the user enters into the description are exported as tags, tags are converted back
+                //to line breaks on import.
+                nextDescription = fileInput.nextLine().replaceAll("<br>", "\n");
 
-                nextDate = fileInput.nextLine();
-                nextEntry.setDueDate(nextDate);
+                String nextDateString = fileInput.nextLine(); //Store the date as a string to check if it's null
+                if(!nextDateString.equals("null")){ //The date might be null, in accordance with the requirements
+                    nextDate = LocalDate.parse(nextDateString); //Trying to parse null value as a date would throw an exception
+                }else{
+                    nextDate = null;
+                }
 
-                nextCompletion = Boolean.parseBoolean(fileInput.nextLine());
-                nextEntry.setCompletion(nextCompletion);
+                nextCompletion = Boolean.parseBoolean(fileInput.nextLine()); //Completion status is just "true" or "false"
 
-                fileContents.addEntry(new toDoListEntry(nextDescription, nextDate, nextCompletion));
+                //Add one entry to the to-do list object with all three of those parameters.
+                //Date might be null, description and completion status are not null.
+                fileContents.addEntry(new ToDoListEntry(nextDescription, nextDate, nextCompletion));
+
                 //Continue reading until there are no more lines.
             }
+        }catch(NoSuchElementException e){
+            //If you somehow manage to try to read a file that doesn't exist, it gives you an empty to-do list.
+            return new ToDoList();
         }
 
-        //Return a to-do list with each entry from the text file.
+        //Once it's all read, return a to-do list with each entry from the text file.
         return fileContents;
     }
 }
 
-class fileWriter {
-    public void writeListsToFile(String filePath, toDoList[] saveData){
-        //Taking a file path and an array of to-do lists as arguments
+class FileWriter {
+    public void writeListsToFile(String filePath, ToDoList saveData) throws FileNotFoundException {
+        //Taking a file path and an array of to-do lists as arguments,
         //this method opens a formatter for a text file at the specified path
-        //For each item in the array:
-            //write one line containing the name of the to-do list and how many entries it has
-            //for each entry in the to-do list:
-                //write one line containing the description, date, and completeness of a single entry
+
+        try(Formatter output = new Formatter(filePath)) {
+
+            //For each entry:
+            for(int i=0;i<saveData.getLength();i++){
+                //If the description is empty, replace it with a default description per the requirements.
+                String nextDesc = saveData.getEntry(i).getDescription();
+                if(nextDesc == null){
+                    nextDesc = "no description";
+                }
+                //Output the description, the due date, and the completion status on three sequential lines.
+                output.format("%s%n%s%n%s%n", nextDesc.replaceAll("\n", "<br>"),
+                        saveData.getEntry(i).getDueDate(), saveData.getEntry(i).getCompletionStatus());
+            }
+        }
     }
 }
 
-class toDoList {
-    private List<toDoListEntry> entries = new ArrayList<>();
+class ToDoList {
+    //A to-do list is created as the program starts, and it stores a list of entries.
+    private List<ToDoListEntry> entries = new ArrayList<>();
 
-    public void printList() {
-        for(toDoListEntry entry : entries){
-            System.out.println(entry.getDescription());
-            System.out.println(entry.getDueDate());
-            System.out.println(entry.getCompletionStatus());
-        }
-    }
-
-    public void addEntry(toDoListEntry newEntry){
+    public void addEntry(ToDoListEntry newEntry){
         //Adds a new entry to the list
         entries.add(newEntry);
     }
 
-    public toDoListEntry getEntry(int index){
+    public ToDoListEntry getEntry(int index){
         //Returns the entry at the specified index
         return entries.get(index);
     }
@@ -89,36 +101,41 @@ class toDoList {
         return entries.size();
     }
 
-    public toDoListEntry deleteEntry(int index){
+    public void deleteEntry(int index){
         //Discards the entry at the specified index
-        return null;
+        entries.remove(index);
     }
 
     public void clearList(){
         //Discards all entries from the to-do list.
         entries.clear();
-        System.out.println("List of entries cleared.");
     }
 }
 
-class toDoListEntry {
+class ToDoListEntry {
+    //Each ToDoListEntry
     private String description;
-    private String dueDate;
+    private LocalDate dueDate;
     private boolean completionStatus;
 
-    toDoListEntry(){
-        //Creates a new entry with completionStatus initialized to false
+    public ToDoListEntry(){
+        //This constructor is used when the user hits the New Item button
+        //Creates a new entry with completionStatus initialized to false and description set to "no description", which
+        //is technically a description for the requirements.
+        description = "no description";
+        completionStatus = false;
     }
 
-    toDoListEntry(String description, String dueDate, boolean completionStatus){
-        //Creates a new entry with due date, name, and completion status
+    public ToDoListEntry(String description, LocalDate dueDate, boolean completionStatus){
+        //This constructor is used by the import method.
+        //Creates a new entry with due date, name, and completion status initialized.
         this.dueDate = dueDate;
         this.description = description;
         this.completionStatus = completionStatus;
     }
 
-    public void setDueDate(String dueDate){
-        //Checks if the due date is formatted properly, returns an error message or sets the new due date.
+    public void setDueDate(LocalDate dueDate){
+        //Sets the new due date for this entry. DatePicker should ensure that any dates passed are valid or null.
         this.dueDate = dueDate;
     }
 
@@ -132,7 +149,7 @@ class toDoListEntry {
         this.completionStatus = completionStatus;
     }
 
-    public String getDueDate(){
+    public LocalDate getDueDate(){
         //Returns the due date of this item
         return dueDate;
     }
@@ -153,17 +170,16 @@ public class Application extends javafx.application.Application {
 
     @Override
     public void start(Stage stage) throws Exception {
-        fileReader filereader = new fileReader();
-        toDoList startupList = new toDoList();
+        FileReader filereader = new FileReader();
+        ToDoList startupList = new ToDoList();
 
         FXMLLoader loader = new FXMLLoader(getClass().getResource("scene.fxml"));
         Parent root = loader.load();
         FXMLController controller = loader.<FXMLController>getController();
-        controller.setData(startupList);
-
-        //Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("scene.fxml")));
 
         Scene scene = new Scene(root);
+        controller.setData(startupList, scene);
+
         scene.getStylesheets().add(Objects.requireNonNull(getClass().getResource("styles.css")).toExternalForm());
 
         stage.setTitle("To-Do List");
